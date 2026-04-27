@@ -1,69 +1,108 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MyPlayer : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
-    public float rotateSpeed = 150.0f; 
+    public float rotateSpeed = 150.0f;
+    public float jumpForce = 5.0f;
+    public float maxStemina = 150.0f;
+    public float stemina;
+
     private Rigidbody rigidBody;
     private Animator anim;
-    public float jumpForce = 5.0f;
-    private bool isGrounded = true;
-    bool jumpRequested = false;
 
+    public int maxJumpCount = 2;
+    private int remainJumpCount;
+    private bool isGrounded;
 
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         rigidBody.freezeRotation = true;
+        stemina = maxStemina;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && remainJumpCount > 0)
         {
-            jumpRequested = true;
-            anim.SetBool("IsJumping", true);
+            PerformJump();
         }
+    }
+
+    void PerformJump()
+    {
+        anim.ResetTrigger("doJump");
+        anim.SetTrigger("doJump");
+
+        rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
+        rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+        remainJumpCount--;
+        isGrounded = false;
+        anim.SetBool("isGrounded", false);
     }
 
     void FixedUpdate()
     {
+        Debug.Log("현재 스테미나 :" + stemina);
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
+        Vector3 moveDir = new Vector3(h, 0, v).normalized;
 
-        Vector3 moveDir = new Vector3(h, 0, v).normalized * moveSpeed;
+        bool isLanding = anim.GetCurrentAnimatorStateInfo(0).IsTag("Landing");
 
-        rigidBody.linearVelocity = new Vector3(moveDir.x, rigidBody.linearVelocity.y, moveDir.z);
-
-        if (moveDir.magnitude > 0.1f)
+        if (anim.GetBool("isGrounded") && isLanding)
         {
-            anim.SetBool("isWalking", true);
-
-            Quaternion newRotation = Quaternion.LookRotation(moveDir);
-            rigidBody.MoveRotation(Quaternion.Slerp(rigidBody.rotation, newRotation, rotateSpeed * Time.fixedDeltaTime));
+            rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
+            anim.SetBool("isWalking", false);
+            
         }
         else
         {
-            anim.SetBool("isWalking", false);
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                moveSpeed = 10.0f;
+                Debug.Log("LeftShift 눌림 :");
+
+            }
+
+            anim.SetFloat("speed", moveSpeed);
+            rigidBody.linearVelocity = new Vector3(moveDir.x * moveSpeed, rigidBody.linearVelocity.y, moveDir.z * moveSpeed);
+
+            if (moveDir.magnitude > 0.1f)
+            {
+                anim.SetBool("isWalking", true);
+                Quaternion newRotation = Quaternion.LookRotation(moveDir);
+                rigidBody.MoveRotation(Quaternion.Slerp(rigidBody.rotation, newRotation, rotateSpeed * Time.fixedDeltaTime));
+
+                if (stemina > 0 && moveSpeed >= 10) stemina--;
+                else moveSpeed = 5.0f;
+            }
+            else
+            {
+                anim.SetBool("isWalking", false);
+                if (stemina < maxStemina) stemina++;
+            }
         }
 
-        if (jumpRequested)
-        {
-            rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
-            jumpRequested = false;
-        }
+        float vely = isGrounded ? 0f : rigidBody.linearVelocity.y;
+        anim.SetFloat("yVelocity", vely);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.name.Contains("Plane"))
+        if (collision.gameObject.CompareTag("Floor"))
         {
+            rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
+
             isGrounded = true;
-            Debug.Log("바닥 착지 성공!");
-            anim.SetBool("IsJumping", false);
+            remainJumpCount = maxJumpCount;
+            anim.ResetTrigger("doJump");
+            anim.SetBool("isGrounded", true);
+            anim.SetTrigger("doLanding");
         }
     }
 }
-
