@@ -4,16 +4,32 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    //이동 속도 및 점프 높이 조절 부분
+    //이동 관련 조절 부분
     [Header("Movement Settings")]
     public float moveSpeed = 5.0f;
     public float rotateSpeed = 150.0f;
     public float jumpForce = 5.0f;
-
-    //스테미나 조절 부분
-    [Header("Stamina Settings")]
+    public int maxJumpCount = 2;
     public float maxStemina = 150.0f;
     public float stemina;
+
+    //착지 확인 부분
+    [Header("Ground Check Settings")]
+    public float groundCheckDistance = 0.2f;
+    public LayerMask groundLayer;
+
+    // 벽을 감지 부분
+    [Header("Obstacle Settings")]
+    public float wallCheckDistance = 0.5f; 
+    public LayerMask wallLayer;
+
+    // 사운드 부분
+    [Header("Audio Settings")]
+    public AudioClip walkSound;
+    public AudioClip sprintSound;
+    public AudioClip landSound;
+    public float sound = 0.6f;
+    private AudioSource audioSource;
 
     private Rigidbody rigidBody;
     private Animator anim;
@@ -24,8 +40,7 @@ public class PlayerController : MonoBehaviour
     private InputAction sprintAction;
     private InputAction toggleAction;
 
-    public int maxJumpCount = 2;
-    private int remainJumpCount;
+    private int addJump;
     private bool isGrounded;
 
     public CinemachineCamera firstPersonCam;
@@ -42,6 +57,8 @@ public class PlayerController : MonoBehaviour
         jumpAction = playerInput.actions["Jump"];
         sprintAction = playerInput.actions["Sprint"];
         toggleAction = playerInput.actions["Next"];
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -55,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (jumpAction.WasPressedThisFrame() && remainJumpCount > 0)
+        if (jumpAction.WasPressedThisFrame() && addJump > 0)
         {
             PerformJump();
         }
@@ -64,17 +81,33 @@ public class PlayerController : MonoBehaviour
         {
             ToggleCamera();
         }
+
+        bool wasGrounded = isGrounded;
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, groundCheckDistance, groundLayer);
+
+        anim.SetBool("isGrounded", isGrounded);
+
+        if (isGrounded && !wasGrounded && rigidBody.linearVelocity.y <= 0.01f)
+        {
+            addJump = maxJumpCount - 1;
+            anim.SetTrigger("doLanding");
+        }
+
     }
 
     void PerformJump()
     {
-        anim.ResetTrigger("doJump");
         anim.SetTrigger("doJump");
+
+       // if (audioSource != null && audioSource.isPlaying)
+       // {
+       //     audioSource.Stop();
+       // }
 
         rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
         rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-        remainJumpCount--;
+        addJump--;
         isGrounded = false;
         anim.SetBool("isGrounded", false);
     }
@@ -101,9 +134,17 @@ public class PlayerController : MonoBehaviour
         if (anim.GetBool("isGrounded") && isLanding)
         {
             rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
+            anim.SetBool("isWalking", false);
+
+            
         }
         else
         {
+            bool isBlocked = false;
+            if (moveDir.magnitude > 0.1f)
+            {
+                isBlocked = Physics.Raycast(transform.position + Vector3.up * 0.2f, moveDir, wallCheckDistance, wallLayer);
+            }
             if (sprintAction.IsPressed() && stemina > 0 && moveDir.magnitude > 0.1f)
             {
                 moveSpeed = 10.0f;
@@ -114,44 +155,39 @@ public class PlayerController : MonoBehaviour
                 moveSpeed = 5.0f;
                 if (stemina < maxStemina) stemina += 0.3f;
             }
-
             anim.SetFloat("speed", moveSpeed);
-            rigidBody.linearVelocity = new Vector3(moveDir.x * moveSpeed, rigidBody.linearVelocity.y, moveDir.z * moveSpeed);
-
-            if (moveDir.magnitude > 0.1f)
+            if (isBlocked)
             {
-                anim.SetBool("isWalking", true);
-
-                if (isFirstPerson)
-                {
-                    Quaternion targetRot = Quaternion.LookRotation(forward);
-                    rigidBody.MoveRotation(Quaternion.Slerp(rigidBody.rotation, targetRot, rotateSpeed * Time.fixedDeltaTime));
-                }
-                else
-                {
-                    Quaternion targetRot = Quaternion.LookRotation(moveDir);
-                    rigidBody.MoveRotation(Quaternion.Slerp(rigidBody.rotation, targetRot, rotateSpeed * Time.fixedDeltaTime));
-                }
+                rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
+                anim.SetBool("isWalking", false);
+                
             }
             else
             {
-                anim.SetBool("isWalking", false);
+                rigidBody.linearVelocity = new Vector3(moveDir.x * moveSpeed, rigidBody.linearVelocity.y, moveDir.z * moveSpeed);
+                if (moveDir.magnitude > 0.1f)
+                {
+                    anim.SetBool("isWalking", true);
+
+                    if (isFirstPerson)
+                    {
+                        Quaternion targetRot = Quaternion.LookRotation(forward);
+                        rigidBody.MoveRotation(Quaternion.Slerp(rigidBody.rotation, targetRot, rotateSpeed * Time.fixedDeltaTime));
+                    }
+                    else
+                    {
+                        Quaternion targetRot = Quaternion.LookRotation(moveDir);
+                        rigidBody.MoveRotation(Quaternion.Slerp(rigidBody.rotation, targetRot, rotateSpeed * Time.fixedDeltaTime));
+                    }
+                }
+                else
+                {
+                    anim.SetBool("isWalking", false);
+                }
             }
         }
-
         float vely = isGrounded ? 0f : rigidBody.linearVelocity.y;
         anim.SetFloat("yVelocity", vely);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            isGrounded = true;
-            remainJumpCount = maxJumpCount;
-            anim.SetBool("isGrounded", true);
-            anim.SetTrigger("doLanding");
-        }
     }
 
     void ToggleCamera()
@@ -159,5 +195,26 @@ public class PlayerController : MonoBehaviour
         isFirstPerson = !isFirstPerson;
         firstPersonCam.Priority = isFirstPerson ? 20 : 10;
         thirdPersonCam.Priority = isFirstPerson ? 10 : 20;
+    }
+
+    public void PlayFootstep(string type)
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+
+        if (type == "Walk")
+        {
+            audioSource.PlayOneShot(walkSound, sound);
+        }
+        else if (type == "Sprint")
+        {
+            audioSource.PlayOneShot(sprintSound, sound);
+        }
+        else if (type == "Landing")
+        {
+            audioSource.PlayOneShot(landSound, sound);
+        }
     }
 }
