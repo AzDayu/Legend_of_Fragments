@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     public float rotateSpeed = 150.0f;
     public float jumpForce = 5.0f;
     public int maxJumpCount = 2;
-    public float maxStemina = 150.0f;
-    public float stemina;
+    public float maxStamina = 150.0f;
+    public float stamina;
 
     [Header("Ground Check Settings")]
     public float groundCheckDistance = 0.2f;
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rigidBody.freezeRotation = true;
-        stemina = maxStemina;
+        stamina = maxStamina;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -97,12 +97,11 @@ public class PlayerController : MonoBehaviour
             ToggleCamera();
         }
 
-        bool wasGrounded = isGrounded;
         isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, groundCheckDistance, groundLayer);
 
         anim.SetBool("isGrounded", isGrounded);
 
-        if (isGrounded && !wasGrounded && rigidBody.linearVelocity.y <= 0.01f)
+        if (isGrounded && rigidBody.linearVelocity.y <= 0.01f)
         {
             addJump = maxJumpCount - 1;
             anim.SetTrigger("doLanding");
@@ -115,8 +114,8 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
 
-        float mouseX = look.x * mouseSensitivity * Time.deltaTime;
-        float mouseY = look.y * mouseSensitivity * Time.deltaTime;
+        float mouseX = look.x * mouseSensitivity * Time.fixedDeltaTime;
+        float mouseY = look.y * mouseSensitivity * Time.fixedDeltaTime;
 
         yRotation += mouseX;
         xRotation -= mouseY;
@@ -184,15 +183,15 @@ public class PlayerController : MonoBehaviour
                 isBlocked = Physics.Raycast(transform.position + Vector3.up * 0.2f, moveDir, wallCheckDistance, wallLayer);
             }
 
-            if (sprintAction.IsPressed() && stemina > 0 && moveDir.magnitude > 0.1f)
+            if (sprintAction.IsPressed() && stamina > 0 && moveDir.magnitude > 0.1f)
             {
                 moveSpeed = 10.0f;
-                stemina -= 0.5f;
+                stamina -= 0.5f;
             }
             else
             {
                 moveSpeed = 5.0f;
-                if (stemina < maxStemina) stemina += 0.3f;
+                if (stamina < maxStamina) stamina += 0.3f;
             }
 
             anim.SetFloat("speed", moveSpeed);
@@ -244,7 +243,6 @@ public class PlayerController : MonoBehaviour
     {
         if (audioSource == null) return;
 
-        // 타입 바뀌면 기존 사운드 끊기
         if (currentType != type)
         {
             audioSource.Stop();
