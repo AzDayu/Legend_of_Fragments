@@ -2,9 +2,16 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum PlayerSoundType
+{
+    None = 0,
+    Walk,
+    Sprint,
+    Landing
+}
+
 public class PlayerController : MonoBehaviour
 {
-    //이동 관련 조절 부분
     [Header("Movement Settings")]
     public float moveSpeed = 5.0f;
     public float rotateSpeed = 150.0f;
@@ -13,23 +20,31 @@ public class PlayerController : MonoBehaviour
     public float maxStemina = 150.0f;
     public float stemina;
 
-    //착지 확인 부분
     [Header("Ground Check Settings")]
     public float groundCheckDistance = 0.2f;
     public LayerMask groundLayer;
 
-    // 벽을 감지 부분
     [Header("Obstacle Settings")]
-    public float wallCheckDistance = 0.5f; 
+    public float wallCheckDistance = 0.5f;
     public LayerMask wallLayer;
 
-    // 사운드 부분
+    [Header("Camera Settings")]
+    public CinemachineCamera firstPersonCam;
+    public CinemachineCamera thirdPersonCam;
+    public Transform cameraPivot;
+
     [Header("Audio Settings")]
     public AudioClip walkSound;
     public AudioClip sprintSound;
     public AudioClip landSound;
     public float sound = 0.6f;
     private AudioSource audioSource;
+
+    public float mouseSensitivity = 100f;
+    private float xRotation = 0f;
+    private float yRotation = 0f;
+
+    private bool isFirstPerson = false;
 
     private Rigidbody rigidBody;
     private Animator anim;
@@ -39,13 +54,11 @@ public class PlayerController : MonoBehaviour
     private InputAction jumpAction;
     private InputAction sprintAction;
     private InputAction toggleAction;
+    private InputAction lookAction;
+    private InputAction freeCamAction;
 
     private int addJump;
     private bool isGrounded;
-
-    public CinemachineCamera firstPersonCam;
-    public CinemachineCamera thirdPersonCam;
-    private bool isFirstPerson = false;
 
     void Awake()
     {
@@ -57,6 +70,8 @@ public class PlayerController : MonoBehaviour
         jumpAction = playerInput.actions["Jump"];
         sprintAction = playerInput.actions["Sprint"];
         toggleAction = playerInput.actions["Next"];
+        lookAction = playerInput.actions["Look"];
+        freeCamAction = playerInput.actions["FreeCam"];
 
         audioSource = GetComponent<AudioSource>();
     }
@@ -92,17 +107,33 @@ public class PlayerController : MonoBehaviour
             addJump = maxJumpCount - 1;
             anim.SetTrigger("doLanding");
         }
+        cameraPivot.position = transform.position;
 
+    }
+
+    void HandleLook()
+    {
+        Vector2 look = lookAction.ReadValue<Vector2>();
+
+        float mouseX = look.x * mouseSensitivity * Time.deltaTime;
+        float mouseY = look.y * mouseSensitivity * Time.deltaTime;
+
+        yRotation += mouseX;
+        xRotation -= mouseY;
+
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f);
+
+        cameraPivot.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
+        if (isFirstPerson)
+        {
+            transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        }
     }
 
     void PerformJump()
     {
         anim.SetTrigger("doJump");
-
-       // if (audioSource != null && audioSource.isPlaying)
-       // {
-       //     audioSource.Stop();
-       // }
 
         rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, 0, rigidBody.linearVelocity.z);
         rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -114,11 +145,20 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (freeCamAction.IsPressed())
+        {
+            rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
+            anim.SetBool("isWalking", false);
+            HandleLook();
+        }
+        cameraPivot.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
         Vector2 input = moveAction.ReadValue<Vector2>();
         float h = input.x;
         float v = input.y;
 
         Transform camTransform = isFirstPerson ? firstPersonCam.transform : thirdPersonCam.transform;
+
         Vector3 forward = camTransform.forward;
         Vector3 right = camTransform.right;
 
@@ -135,8 +175,6 @@ public class PlayerController : MonoBehaviour
         {
             rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
             anim.SetBool("isWalking", false);
-
-            
         }
         else
         {
@@ -145,6 +183,7 @@ public class PlayerController : MonoBehaviour
             {
                 isBlocked = Physics.Raycast(transform.position + Vector3.up * 0.2f, moveDir, wallCheckDistance, wallLayer);
             }
+
             if (sprintAction.IsPressed() && stemina > 0 && moveDir.magnitude > 0.1f)
             {
                 moveSpeed = 10.0f;
@@ -155,16 +194,18 @@ public class PlayerController : MonoBehaviour
                 moveSpeed = 5.0f;
                 if (stemina < maxStemina) stemina += 0.3f;
             }
+
             anim.SetFloat("speed", moveSpeed);
+
             if (isBlocked)
             {
                 rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
                 anim.SetBool("isWalking", false);
-                
             }
             else
             {
                 rigidBody.linearVelocity = new Vector3(moveDir.x * moveSpeed, rigidBody.linearVelocity.y, moveDir.z * moveSpeed);
+
                 if (moveDir.magnitude > 0.1f)
                 {
                     anim.SetBool("isWalking", true);
@@ -186,6 +227,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
         float vely = isGrounded ? 0f : rigidBody.linearVelocity.y;
         anim.SetFloat("yVelocity", vely);
     }
@@ -197,24 +239,33 @@ public class PlayerController : MonoBehaviour
         thirdPersonCam.Priority = isFirstPerson ? 10 : 20;
     }
 
-    public void PlayFootstep(string type)
+    PlayerSoundType currentType;
+    public void PlayPlayerSound(PlayerSoundType type)
     {
-        if (audioSource != null && audioSource.isPlaying)
+        if (audioSource == null) return;
+
+        // 타입 바뀌면 기존 사운드 끊기
+        if (currentType != type)
         {
             audioSource.Stop();
+            currentType = type;
         }
 
-        if (type == "Walk")
+        AudioClip clip = null;
+
+        switch (type)
         {
-            audioSource.PlayOneShot(walkSound, sound);
+            case PlayerSoundType.Walk: clip = walkSound; break;
+            case PlayerSoundType.Sprint: clip = sprintSound; break;
+            case PlayerSoundType.Landing: clip = landSound; break;
         }
-        else if (type == "Sprint")
-        {
-            audioSource.PlayOneShot(sprintSound, sound);
-        }
-        else if (type == "Landing")
-        {
-            audioSource.PlayOneShot(landSound, sound);
-        }
+
+        audioSource.PlayOneShot(clip, sound);
     }
+
+    public void PlayerSoundAllStop()
+    {
+        audioSource.Stop();
+    }
+
 }

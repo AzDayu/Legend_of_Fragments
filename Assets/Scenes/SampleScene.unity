@@ -318,13 +318,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2897842, y: -3.412915e-16, z: 1.0333475e-16, w: 0.95709205}
-  m_LocalPosition: {x: -0.90288, y: 4, z: -5.76676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 1.8, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.73, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,6 +700,37 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &538582028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 538582029}
+  m_Layer: 0
+  m_Name: CameraPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &538582029
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538582028}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 6.617445e-24, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,7 +902,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1377540612}
   - component: {fileID: 1377540613}
-  - component: {fileID: 1377540616}
+  - component: {fileID: 1377540614}
   m_Layer: 0
   m_Name: 3stPersonCam
   m_TagString: Untagged
@@ -887,13 +918,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377540611}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.28978416, y: -3.5298957e-16, z: 1.4197101e-16, w: 0.95709205}
-  m_LocalPosition: {x: -0.90288, y: 4, z: -5.76676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 1.8, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 16.415, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 7.99, y: 0, z: 0}
 --- !u!114 &1377540613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -914,7 +945,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 7219969573663291681}
+    TrackingTarget: {fileID: 538582029}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -937,7 +968,7 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
---- !u!114 &1377540616
+--- !u!114 &1377540614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -946,16 +977,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1377540611}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
-  TrackerSettings:
-    BindingMode: 4
-    PositionDamping: {x: 0, y: 0, z: 0}
-    AngularDampingMode: 0
-    RotationDamping: {x: 1, y: 1, z: 1}
-    QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 4, z: -6}
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineThirdPersonFollow
+  Damping: {x: 0, y: 0, z: 0}
+  ShoulderOffset: {x: 1, y: 1, z: 0}
+  VerticalArmLength: 0.8
+  CameraSide: 1
+  CameraDistance: 6
+  AvoidObstacles:
+    Enabled: 0
+    CollisionFilter:
+      serializedVersion: 2
+      m_Bits: 1
+    IgnoreTag: 
+    CameraRadius: 0.2
+    DampingIntoCollision: 0
+    DampingFromCollision: 0.5
 --- !u!1 &1580090530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,9 +1645,6 @@ PrefabInstance:
       addedObject: {fileID: 7219969573663291683}
     - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7219969573663291686}
-    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7219969573663291687}
   m_SourcePrefab: {fileID: 100100000, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
 --- !u!54 &7219969573663291677
@@ -1661,16 +1696,18 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 192
-  wallCheckDistance: 0.5
+  wallCheckDistance: 0.6
   wallLayer:
     serializedVersion: 2
     m_Bits: 192
-  walkSound: {fileID: 8300000, guid: ca04697913927924480f4a4411e9ea00, type: 3}
-  sprintSound: {fileID: 8300000, guid: dc68283702ea6e6468fe01f78420dc06, type: 3}
-  landSound: {fileID: 8300000, guid: 205da48ecf531564a88cc7d42c048676, type: 3}
-  sound: 0.6
   firstPersonCam: {fileID: 352320534}
   thirdPersonCam: {fileID: 1377540613}
+  cameraPivot: {fileID: 538582029}
+  walkSound: {fileID: 8300000, guid: ca04697913927924480f4a4411e9ea00, type: 3}
+  sprintSound: {fileID: 8300000, guid: dc68283702ea6e6468fe01f78420dc06, type: 3}
+  landSound: {fileID: 8300000, guid: a56bc4763b5261541a56ccb76a86dc7a, type: 3}
+  sound: 0.6
+  mouseSensitivity: 100
 --- !u!136 &7219969573663291679
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1773,23 +1810,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &7219969573663291686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175983302058914751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3a0bc7afce8cfb4eaad993f407169bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerSound
-  walkSound: {fileID: 8300000, guid: be88cf1f210fe1b4b9df11499e33c3b7, type: 3}
-  sprintSound: {fileID: 8300000, guid: 4f0e4d04dca666041887ec5fe7c8b696, type: 3}
-  landSound: {fileID: 8300000, guid: 50bdd99de04b5a34eacc0be7cae5f01c, type: 3}
-  sound: 2
-  audioSource: {fileID: 0}
 --- !u!82 &7219969573663291687
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1904,3 +1924,4 @@ SceneRoots:
   - {fileID: 1883027731}
   - {fileID: 1584206451}
   - {fileID: 352320535}
+  - {fileID: 538582029}
