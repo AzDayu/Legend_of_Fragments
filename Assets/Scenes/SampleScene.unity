@@ -1630,9 +1630,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7219969573663291678}
-    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7219969573663291677}
     - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
       insertIndex: -1
@@ -1646,6 +1643,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7219969573663291687}
+    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7219969573663291692}
+    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7219969573663291691}
+    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7219969573663291690}
+    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7219969573663291689}
+    - targetCorrespondingSourceObject: {fileID: 3861548126667845860, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7219969573663291688}
   m_SourcePrefab: {fileID: 100100000, guid: 1cec385111c7bbd40ad67ea3ae60c612, type: 3}
 --- !u!54 &7219969573663291677
 Rigidbody:
@@ -1674,40 +1686,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &7219969573663291678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175983302058914751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3dc0a2dcabc90244abd730f9187671fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyPlayer
-  moveSpeed: 5
-  rotateSpeed: 150
-  jumpForce: 10
-  maxJumpCount: 2
-  maxStemina: 150
-  stemina: 0
-  groundCheckDistance: 0.2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 192
-  wallCheckDistance: 0.6
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 192
-  firstPersonCam: {fileID: 352320534}
-  thirdPersonCam: {fileID: 1377540613}
-  cameraPivot: {fileID: 538582029}
-  walkSound: {fileID: 8300000, guid: ca04697913927924480f4a4411e9ea00, type: 3}
-  sprintSound: {fileID: 8300000, guid: dc68283702ea6e6468fe01f78420dc06, type: 3}
-  landSound: {fileID: 8300000, guid: a56bc4763b5261541a56ccb76a86dc7a, type: 3}
-  sound: 0.6
-  mouseSensitivity: 100
 --- !u!136 &7219969573663291679
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1907,6 +1885,90 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7219969573663291688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175983302058914751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a17746c50df9eee4f8642e0eadfea73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAudio
+  walkSound: {fileID: 8300000, guid: ca04697913927924480f4a4411e9ea00, type: 3}
+  sprintSound: {fileID: 8300000, guid: dc68283702ea6e6468fe01f78420dc06, type: 3}
+  landSound: {fileID: 8300000, guid: a56bc4763b5261541a56ccb76a86dc7a, type: 3}
+  soundVolume: 0.6
+--- !u!114 &7219969573663291689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175983302058914751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc4e5b871294b244a07e310363f8b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
+  firstPersonCam: {fileID: 352320534}
+  thirdPersonCam: {fileID: 1377540613}
+  cameraPivot: {fileID: 538582029}
+  mouseSensitivity: 100
+--- !u!114 &7219969573663291690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175983302058914751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b77b81705f7cc43aa73e268d032e5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
+--- !u!114 &7219969573663291691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175983302058914751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c2581ae757e4b742aec064ecbb934df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  moveSpeed: 5
+  rotateSpeed: 150
+  jumpForce: 10
+  maxJumpCount: 2
+  groundCheckDistance: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 192
+  wallCheckDistance: 0.6
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 192
+--- !u!114 &7219969573663291692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175983302058914751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4677a8f86545f44bb7bda22dce84a4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  maxStamina: 150
+  stamina: 0
+  maxHp: 100
+  currentHp: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -2,14 +2,6 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum PlayerSoundType
-{
-    None = 0,
-    Walk,
-    Sprint,
-    Landing
-}
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
