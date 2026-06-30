@@ -12,6 +12,8 @@ public class PlayerInputHandler : MonoBehaviour
     public bool SprintPressed { get; private set; }
     public bool ToggleCameraTriggered { get; private set; }
     public bool FreeCamPressed { get; private set; }
+    public bool AttackPressed { get; private set; }
+    public bool WeaponPressed { get; private set; }
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -19,6 +21,8 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction toggleAction;
     private InputAction lookAction;
     private InputAction freeCamAction;
+    private InputAction AttackAction;
+    private InputAction WeaponAction;
 
     void Awake()
     {
@@ -30,6 +34,8 @@ public class PlayerInputHandler : MonoBehaviour
         toggleAction = playerInput.actions["Next"];
         lookAction = playerInput.actions["Look"];
         freeCamAction = playerInput.actions["FreeCam"];
+        AttackAction = playerInput.actions["Attack"];
+        WeaponAction = playerInput.actions["Weapon"];
     }
 
     void Update()
@@ -41,5 +47,7 @@ public class PlayerInputHandler : MonoBehaviour
         SprintPressed = sprintAction.IsPressed();
         ToggleCameraTriggered = toggleAction.WasPressedThisFrame();
         FreeCamPressed = freeCamAction.IsPressed();
+        AttackPressed = AttackAction.IsPressed();
+        WeaponPressed = WeaponAction.WasPressedThisFrame();
     }
 }

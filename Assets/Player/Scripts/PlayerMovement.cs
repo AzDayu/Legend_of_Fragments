@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInputHandler inputHandler;
     private PlayerCamera playerCamera;
     private PlayerStats playerStats;
+    private PlayerCombat playerCombat;
 
     private int addJump;
     private bool isGrounded;
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         playerCamera = GetComponent<PlayerCamera>();
         playerStats = GetComponent<PlayerStats>();
+        playerCombat = GetComponent<PlayerCombat>();
     }
 
     void Start()
@@ -78,7 +80,17 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        playerCamera.HandleLook(inputHandler.LookInput, transform);
+        if (inputHandler.FreeCamPressed)
+        {
+            playerCamera.HandleLook(inputHandler.LookInput, transform);
+        }
+
+        if (playerCombat != null && playerCombat.isAttacking)
+        {
+            rigidBody.linearVelocity = new Vector3(0, rigidBody.linearVelocity.y, 0);
+            anim.SetBool("isWalking", false);
+            return;
+        }
 
         Vector2 input = inputHandler.MoveInput;
         Transform camTransform = playerCamera.GetActiveCameraTransform();
@@ -154,6 +166,7 @@ public class PlayerMovement : MonoBehaviour
 
         float vely = isGrounded ? 0f : rigidBody.linearVelocity.y;
         anim.SetFloat("yVelocity", vely);
+
     }
 
     void PerformJump()
@@ -167,4 +180,5 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = false;
         anim.SetBool("isGrounded", false);
     }
+
 }
