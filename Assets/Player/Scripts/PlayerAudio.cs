@@ -5,7 +5,8 @@ public enum PlayerSoundType
     None = 0,
     Walk,
     Sprint,
-    Landing
+    Landing,
+    Slash
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -15,6 +16,7 @@ public class PlayerAudio : MonoBehaviour
     public AudioClip walkSound;
     public AudioClip sprintSound;
     public AudioClip landSound;
+    public AudioClip slashSound;
     public float soundVolume = 0.6f;
 
     private AudioSource audioSource;
@@ -42,6 +44,7 @@ public class PlayerAudio : MonoBehaviour
             case PlayerSoundType.Walk: clip = walkSound; break;
             case PlayerSoundType.Sprint: clip = sprintSound; break;
             case PlayerSoundType.Landing: clip = landSound; break;
+            case PlayerSoundType.Slash: clip = slashSound; break;
         }
 
         if (clip != null)

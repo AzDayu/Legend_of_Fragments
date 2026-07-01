@@ -303,6 +303,7 @@ MonoBehaviour:
   walkSound: {fileID: 8300000, guid: ca04697913927924480f4a4411e9ea00, type: 3}
   sprintSound: {fileID: 8300000, guid: dc68283702ea6e6468fe01f78420dc06, type: 3}
   landSound: {fileID: 8300000, guid: a56bc4763b5261541a56ccb76a86dc7a, type: 3}
+  slashSound: {fileID: 8300000, guid: 3c448225f41623942baa334ee35b7770, type: 3}
   soundVolume: 0.6
 --- !u!114 &4446026366281209497
 MonoBehaviour:

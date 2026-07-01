@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class PlayerCombat : MonoBehaviour
 
     private Animator anim;
     private PlayerInputHandler inputHandler;
+    private PlayerAudio playerAudio;
 
     public bool isEquip;
 
@@ -23,6 +24,7 @@ public class PlayerCombat : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         inputHandler = GetComponent<PlayerInputHandler>();
+        playerAudio = GetComponent<PlayerAudio>();
     }
 
     void Start()
@@ -57,6 +59,11 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = true;
         lastAttackTime = Time.time;
         anim.SetTrigger("doAttack");
+        if (playerAudio != null)
+        {
+            playerAudio.PlayPlayerSound(PlayerSoundType.Slash);
+        }
+
         Invoke(nameof(ResetAttack), attackCooldown);
 
         Invoke(nameof(WeaponCollider), attackColliderTime);
