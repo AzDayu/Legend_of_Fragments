@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -6,11 +6,8 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
 
     [Header("UI Canvas Roots")]
-    //[SerializeField] private Transform bgRoot;
     [SerializeField] private Transform mainRoot;
-    //[SerializeField] private Transform contentRoot;
     [SerializeField] private Transform popupRoot;
-    //[SerializeField] private Transform topmostRoot;
 
     private Dictionary<UIType, UIBase> cachedUIs = new Dictionary<UIType, UIBase>();
 
@@ -70,7 +67,7 @@ public class UIManager : MonoBehaviour
 
         if (prefab == null)
         {
-            Debug.LogError($"[UIManager] UI ÇÁ¸®ÆÕÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù. °æ·Î¸¦ È®ÀÎÇÏ¼¼¿ä: Resources/{path}");
+            Debug.LogError($"[UIManager] UI í”„ë¦¬íŒ¹ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ê²½ë¡œë¥¼ í™•ì¸í•˜ì„¸ìš”: Resources/{path}");
             return null;
         }
 
@@ -85,7 +82,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[UIManager] ÇÁ¸®ÆÕ¿¡ UIBase ÄÄÆ÷³ÍÆ®°¡ ¾ø½À´Ï´Ù: {uiType}");
+            Debug.LogError($"[UIManager] í”„ë¦¬íŒ¹ì— UIBase ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤: {uiType}");
         }
 
         return uiBase;
@@ -95,11 +92,8 @@ public class UIManager : MonoBehaviour
     {
         return rootType switch
         {
-            ////UIRootType.Background => bgRoot,
             UIRootType.Main => mainRoot,
-            //UIRootType.Content => contentRoot,
             UIRootType.Popup => popupRoot,
-            //UIRootType.Topmost => topmostRoot,
             _ => mainRoot,
         };
     }

@@ -180,6 +180,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c3d492a00fbc2e4c980585dc4ecb099, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6428147199630488335}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c3d492a00fbc2e4c980585dc4ecb099, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7139216028747979221}
   m_SourcePrefab: {fileID: 100100000, guid: 7c3d492a00fbc2e4c980585dc4ecb099, type: 3}
 --- !u!4 &4888969911928033824 stripped
 Transform:
@@ -497,3 +500,15 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &7139216028747979221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6245886993107898553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16c7544945483c14eb2b53ea39b2dd4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyPlayerView

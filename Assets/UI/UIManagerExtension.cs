@@ -1,7 +1,4 @@
-using UnityEngine;
-
-
-
+锘縰sing UnityEngine;
 
 public enum UIRootType
 {
@@ -17,9 +14,9 @@ public enum UIType
     PlayerHUD,
     InteractionPopup,
     EnemyHPBar,
-    GameOverPopup
+    GameOverPopup,
+    Inventory
 }
-
 
 
 public static class UIManagerExtension
@@ -35,7 +32,7 @@ public static class UIManagerExtension
 
         if (uiBase == null)
         {
-            Debug.LogWarning("[UIManagerExtension] PlayerHUD 积己 角菩!");
+            Debug.LogWarning("[UIManagerExtension] PlayerHUD 靸濎劚 鞁ろ尐!");
             return;
         }
 
@@ -47,7 +44,7 @@ public static class UIManagerExtension
 
         if (uiBase == null)
         {
-            Debug.LogWarning("[UIManagerExtension] InteractionPopup 积己 角菩!");
+            Debug.LogWarning("[UIManagerExtension] InteractionPopup 靸濎劚 鞁ろ尐!");
             return;
         }
 
@@ -59,7 +56,7 @@ public static class UIManagerExtension
 
         if (uiBase == null)
         {
-            Debug.LogWarning("[UIManagerExtension] EnemyHPBar 积己 角菩!");
+            Debug.LogWarning("[UIManagerExtension] EnemyHPBar 靸濎劚 鞁ろ尐!");
             return;
         }
 
@@ -69,4 +66,9 @@ public static class UIManagerExtension
         }
     }
 
+    public static void OpenInventoryUI(this UIManager uiManager)
+    {
+        var uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.Inventory);
+        if (uiBase == null) Debug.LogWarning("[UIManagerExtension] Inventory 靸濎劚 鞁ろ尐!");
+    }
 }
