@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f27f6ab6e07284888bd1d598e9060a, type: 3}
   m_Name: AnyItem
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  _itemName: 
-  _itemIcon: {fileID: 0}
-  _maxStackSize: 0
-  _description: 
+  _itemName: any
+  _itemIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _maxStackSize: 100
+  _description: rmrmrmrm

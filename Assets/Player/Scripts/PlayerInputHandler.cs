@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
@@ -14,6 +14,7 @@ public class PlayerInputHandler : MonoBehaviour
     public bool FreeCamPressed { get; private set; }
     public bool AttackPressed { get; private set; }
     public bool WeaponPressed { get; private set; }
+    public bool ToggleInventory { get; private set; }
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -23,6 +24,7 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction freeCamAction;
     private InputAction AttackAction;
     private InputAction WeaponAction;
+    private InputAction InventoryAction;
 
     void Awake()
     {
@@ -36,6 +38,7 @@ public class PlayerInputHandler : MonoBehaviour
         freeCamAction = playerInput.actions["FreeCam"];
         AttackAction = playerInput.actions["Attack"];
         WeaponAction = playerInput.actions["Weapon"];
+        InventoryAction = playerInput.actions["Inventory"];
     }
 
     void Update()
@@ -49,5 +52,6 @@ public class PlayerInputHandler : MonoBehaviour
         FreeCamPressed = freeCamAction.IsPressed();
         AttackPressed = AttackAction.IsPressed();
         WeaponPressed = WeaponAction.WasPressedThisFrame();
+        ToggleInventory = InventoryAction.WasPressedThisFrame();
     }
 }
