@@ -26,6 +26,7 @@ public class InventorySlot : MonoBehaviour
         {
             item.Use();
             Debug.Log(item._itemName + " 사용됨!");
+            Inventory.instance.RemoveItem(item);
         }
     }
 }

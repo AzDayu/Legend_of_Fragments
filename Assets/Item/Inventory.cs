@@ -36,10 +36,14 @@ public class Inventory : MonoBehaviour
         if (isInventoryOpen)
         {
             UIManager.Instance.OpenUI(UIRootType.Popup, UIType.Inventory);
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
         }
         else
         {
             UIManager.Instance.CloseUI(UIType.Inventory);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7707631177352111756}
   - component: {fileID: 3704829411135769067}
   m_Layer: 0
-  m_Name: AnyItem
+  m_Name: FullPotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29222de13d9a4db4a92b8bfa892d9021, type: 2}
+  - {fileID: 2100000, guid: 94839571564be0b4bb98b2873b5816c7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
