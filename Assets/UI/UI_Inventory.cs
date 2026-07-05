@@ -31,11 +31,15 @@ public class UI_Inventory : UIBase
             Destroy(child.gameObject);
         }
 
-        foreach (Item item in Inventory.instance.items)
+        foreach (ItemStack stack in Inventory.instance.items)
         {
             GameObject slotObj = Instantiate(slotPrefab, slotParent);
             InventorySlot slot = slotObj.GetComponent<InventorySlot>();
-            if (slot != null) slot.AddItem(item);
+
+            if (slot != null)
+            {
+                slot.AddItem(stack);
+            }
         }
     }
 }

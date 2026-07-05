@@ -2,16 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ItemStack
+{
+    public Item item;
+    public int amount;
+
+    public ItemStack(Item _item, int _amount)
+    {
+        item = _item;
+        amount = _amount;
+    }
+}
+
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance;
-
-    private PlayerInputHandler inputHandler;
-
+    public List<ItemStack> items = new List<ItemStack>();
     public Action OnInventoryChanged;
-
-    public List<Item> items = new List<Item>();
     private bool isInventoryOpen = false;
+    private PlayerInputHandler inputHandler;
 
     private void Awake()
     {
@@ -19,6 +29,7 @@ public class Inventory : MonoBehaviour
         else Destroy(gameObject);
 
         inputHandler = GetComponent<PlayerInputHandler>();
+
     }
 
     private void Update()
@@ -49,15 +60,29 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item _item)
     {
-        items.Add(_item);
-        Debug.Log(_item._itemName + "이(가) 인벤토리 리스트에 저장되었습니다!");
+        foreach (ItemStack stack in items)
+        {
+            if (stack.item == _item && stack.amount < _item._maxStackSize)
+            {
+                stack.amount++;
+                OnInventoryChanged?.Invoke();
+                return;
+            }
+        }
 
+        items.Add(new ItemStack(_item, 1));
         OnInventoryChanged?.Invoke();
     }
 
-    public void RemoveItem(Item _item)
+    public void RemoveItem(ItemStack _stack)
     {
-        items.Remove(_item);
+        _stack.amount--;
+
+        if (_stack.amount <= 0)
+        {
+            items.Remove(_stack);
+        }
+
         OnInventoryChanged?.Invoke();
     }
 }

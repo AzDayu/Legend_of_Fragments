@@ -1,32 +1,38 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InventorySlot : MonoBehaviour
 {
     public Image icon;
-    private Item item;
+    public TextMeshProUGUI amountText;
 
-    public void AddItem(Item newItem)
-    {
-        item = newItem;
-        icon.sprite = item._itemIcon;
-        icon.enabled = true;
-    }
+    private ItemStack currentStack;
 
-    public void ClearSlot()
+    public void AddItem(ItemStack newStack)
     {
-        item = null;
-        icon.sprite = null;
-        icon.enabled = false;
+        currentStack = newStack;
+
+        icon.sprite = currentStack.item._itemIcon;
+        icon.gameObject.SetActive(true);
+
+        if (currentStack.amount > 1)
+        {
+            amountText.text = currentStack.amount.ToString();
+            amountText.gameObject.SetActive(true);
+        }
+        else
+        {
+            amountText.gameObject.SetActive(false);
+        }
     }
 
     public void UseItem()
     {
-        if (item != null)
+        if (currentStack != null)
         {
-            item.Use();
-            Debug.Log(item._itemName + " 사용됨!");
-            Inventory.instance.RemoveItem(item);
+            currentStack.item.Use();
+            Inventory.instance.RemoveItem(currentStack);
         }
     }
 }
